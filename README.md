@@ -63,9 +63,9 @@ Optional:
 
 ---
 
-## 🔧 Installation
+## Installation
+
+Run:
 
 ```bash
-git clone https://github.com/makxis/iptables-cascade-forwarder.git
-cd iptables-cascade-forwarder
-chmod +x cascade-forward.sh
+wget -qO- https://raw.githubusercontent.com/makxis/iptables-cascade-forwarder/main/install.sh | sudo bash
