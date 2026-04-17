@@ -1,75 +1,71 @@
-# Cascade Port Forwarder
+# iptables-cascade-forwarder
 
-Lightweight interactive Bash utility for configuring cascading port forwarding on Linux using iptables.
-
-## Overview
-
-This tool allows you to create a relay (cascade) server that forwards incoming traffic to another host:
-
-Client → This Server → Target Server
-
-It is useful when you need to expose a remote service through an intermediate VPS or gateway.
-
-The script works via **iptables (DNAT + MASQUERADE)** and provides an interactive interface with clear explanations before applying changes.
+Interactive Bash utility for configuring cascading port forwarding on Linux using iptables.
 
 ---
 
-## Features
+## 🚀 Overview
+
+This tool allows you to turn a Linux server into a traffic relay (cascade node):
+
+Client → Relay Server → Target Server
+
+It transparently forwards incoming connections to a remote destination using iptables (DNAT + MASQUERADE).
+
+---
+
+## ⚙️ How It Works
+
+The script configures:
+
+- `nat PREROUTING` — redirects incoming traffic (DNAT)
+- `nat POSTROUTING` — rewrites source address (MASQUERADE)
+- `filter FORWARD` — allows packet forwarding
+- enables `net.ipv4.ip_forward`
+
+This is the standard Linux packet flow for gateway/relay setups.
+
+---
+
+## ✨ Features
 
 - TCP and UDP support
-- Standard forwarding (same input/output port)
-- Custom forwarding (different input/output ports)
-- Interactive interface (CLI or `whiptail`)
-- Automatic network interface detection
-- Safe rule tagging (only manages its own rules)
-- Ability to list and remove created rules
+- Simple mode (same input/output port)
+- Advanced mode (different ports)
+- Interactive CLI (with optional `whiptail` UI)
+- Safe rule tagging (does NOT touch unrelated rules)
+- Rule listing and selective removal
 - Optional persistence via `netfilter-persistent`
-- Input validation (IP, ports, protocol)
-- No hidden system changes
+- Input validation (IP / port / protocol)
 
 ---
 
-## What the Script Does
+## 🧠 Design Principles
 
-When applying a rule, the script:
-
-1. Enables IP forwarding (if not already enabled)
-2. Adds iptables rules:
-   - `nat PREROUTING` (DNAT)
-   - `nat POSTROUTING` (MASQUERADE)
-   - `filter FORWARD` (traffic allowance)
-3. Optionally saves rules for persistence
+- ❌ No ads, QR codes, or hidden behavior  
+- ❌ No auto-installing itself into system paths  
+- ❌ No forced tuning (BBR, sysctl spam, etc.)  
+- ❌ No firewall override (UFW / firewalld untouched)  
+- ✅ Only minimal required system changes  
+- ✅ Fully transparent actions before execution  
 
 ---
 
-## What the Script Does NOT Do
+## 📦 Requirements
 
-- Does not overwrite existing firewall configuration
-- Does not flush iptables
-- Does not install or enable BBR
-- Does not modify UFW or firewalld automatically
-- Does not copy itself into system paths
-- Does not include ads, telemetry, or external calls
-
----
-
-## Requirements
-
-- Linux server (Debian/Ubuntu recommended)
-- Root privileges
-- `iptables` installed
+- Linux (Debian/Ubuntu recommended)
+- root privileges
+- iptables
 
 Optional:
-- `whiptail` (for UI)
-- `netfilter-persistent` (for rule persistence)
+- `whiptail` — for UI
+- `netfilter-persistent` — for saving rules
 
 ---
 
-## Installation
-
-Clone the repository:
+## 🔧 Installation
 
 ```bash
-git clone https://github.com/yourusername/cascade-port-forwarder.git
-cd cascade-port-forwarder
+git clone https://github.com/makxis/iptables-cascade-forwarder.git
+cd iptables-cascade-forwarder
 chmod +x cascade-forward.sh
